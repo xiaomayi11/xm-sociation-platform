@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.TeamApplicationMapper">
+
+    <select id="selectAll" resultType="com.example.entity.TeamApplication">
+        select ta.*,
+               t.team_name as team_name,
+               u.name as leader_name
+        from `team_application` ta
+        left join `team` t on ta.team_id = t.id
+        left join `user` u on t.leader_id = u.id
+        <where>
+            <if test="teamId != null"> and ta.team_id = #{teamId}</if>
+            <if test="userId != null"> and ta.user_id = #{userId}</if>
+            <if test="status != null and status != ''"> and ta.status = #{status}</if>
+        </where>
+        order by ta.id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.TeamApplication">
+        select ta.*,
+               t.team_name as team_name,
+               u.name as leader_name
+        from `team_application` ta
+        left join `team` t on ta.team_id = t.id
+        left join `user` u on t.leader_id = u.id
+        where ta.id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from `team_application` where id = #{id}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from `team_application` where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.TeamApplication" useGeneratedKeys="true">
+        insert into `team_application`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="teamId != null">team_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="message != null">message,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="teamId != null">#{teamId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="message != null">#{message},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.TeamApplication">
+        update `team_application`
+        <set>
+            <if test="teamId != null">team_id = #{teamId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="message != null">message = #{message},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

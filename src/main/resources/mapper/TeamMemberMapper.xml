@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.TeamMemberMapper">
+
+    <select id="selectAll" resultType="com.example.entity.TeamMember">
+        select tm.*, u.name as user_name
+        from `team_member` tm
+        left join `user` u on tm.user_id = u.id
+        <where>
+            <if test="teamId != null"> and tm.team_id = #{teamId}</if>
+            <if test="userId != null"> and tm.user_id = #{userId}</if>
+        </where>
+        order by tm.id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.TeamMember">
+        select tm.*, u.name as user_name
+        from `team_member` tm
+        left join `user` u on tm.user_id = u.id
+        where tm.id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from `team_member` where id = #{id}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from `team_member` where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.TeamMember" useGeneratedKeys="true">
+        insert into `team_member`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="teamId != null">team_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="role != null">role,</if>
+            <if test="joinTime != null">join_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="teamId != null">#{teamId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="role != null">#{role},</if>
+            <if test="joinTime != null">#{joinTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.TeamMember">
+        update `team_member`
+        <set>
+            <if test="teamId != null">team_id = #{teamId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="joinTime != null">join_time = #{joinTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

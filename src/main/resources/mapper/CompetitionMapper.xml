@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.CompetitionMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Competition">
+        select * from `competition`
+        <where>
+            <if test="name != null"> and name like concat('%', #{name}, '%')</if>
+            <if test="type != null"> and type = #{type}</if>
+        </where>
+        order by id asc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Competition">
+        select * from `competition` where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from `competition` where id = #{id}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from `competition` where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Competition" useGeneratedKeys="true">
+        insert into `competition`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="description != null">description,</if>
+            <if test="iconImg != null">icon_img,</if>
+            <if test="bgImage != null">bg_image,</if>
+            <if test="watermark != null">watermark,</if>
+            <if test="level != null">level,</if>
+            <if test="levelType != null">level_type,</if>
+            <if test="tag != null">tag,</if>
+            <if test="time != null">time,</if>
+            <if test="organizer != null">organizer,</if>
+            <if test="techs != null">techs,</if>
+            <if test="fullDesc != null">full_desc,</if>
+            <if test="mode != null">mode,</if>
+            <if test="website != null">website,</if>
+            <if test="advice != null">advice,</if>
+            <if test="suitable != null">suitable,</if>
+            <if test="grades != null">grades,</if>
+            <if test="type != null">type,</if>
+            <if test="background != null">background,</if>
+            <if test="history != null">history,</if>
+            <if test="culture != null">culture,</if>
+            <if test="eligibility != null">eligibility,</if>
+            <if test="tracks != null">tracks,</if>
+            <if test="resources != null">resources,</if>
+            <if test="timeline != null">timeline,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="description != null">#{description},</if>
+            <if test="iconImg != null">#{iconImg},</if>
+            <if test="bgImage != null">#{bgImage},</if>
+            <if test="watermark != null">#{watermark},</if>
+            <if test="level != null">#{level},</if>
+            <if test="levelType != null">#{levelType},</if>
+            <if test="tag != null">#{tag},</if>
+            <if test="time != null">#{time},</if>
+            <if test="organizer != null">#{organizer},</if>
+            <if test="techs != null">#{techs},</if>
+            <if test="fullDesc != null">#{fullDesc},</if>
+            <if test="mode != null">#{mode},</if>
+            <if test="website != null">#{website},</if>
+            <if test="advice != null">#{advice},</if>
+            <if test="suitable != null">#{suitable},</if>
+            <if test="grades != null">#{grades},</if>
+            <if test="type != null">#{type},</if>
+            <if test="background != null">#{background},</if>
+            <if test="history != null">#{history},</if>
+            <if test="culture != null">#{culture},</if>
+            <if test="eligibility != null">#{eligibility},</if>
+            <if test="tracks != null">#{tracks},</if>
+            <if test="resources != null">#{resources},</if>
+            <if test="timeline != null">#{timeline},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Competition">
+        update `competition`
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="iconImg != null">icon_img = #{iconImg},</if>
+            <if test="bgImage != null">bg_image = #{bgImage},</if>
+            <if test="watermark != null">watermark = #{watermark},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="levelType != null">level_type = #{levelType},</if>
+            <if test="tag != null">tag = #{tag},</if>
+            <if test="time != null">time = #{time},</if>
+            <if test="organizer != null">organizer = #{organizer},</if>
+            <if test="techs != null">techs = #{techs},</if>
+            <if test="fullDesc != null">full_desc = #{fullDesc},</if>
+            <if test="mode != null">mode = #{mode},</if>
+            <if test="website != null">website = #{website},</if>
+            <if test="advice != null">advice = #{advice},</if>
+            <if test="suitable != null">suitable = #{suitable},</if>
+            <if test="grades != null">grades = #{grades},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="background != null">background = #{background},</if>
+            <if test="history != null">history = #{history},</if>
+            <if test="culture != null">culture = #{culture},</if>
+            <if test="eligibility != null">eligibility = #{eligibility},</if>
+            <if test="tracks != null">tracks = #{tracks},</if>
+            <if test="resources != null">resources = #{resources},</if>
+            <if test="timeline != null">timeline = #{timeline},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

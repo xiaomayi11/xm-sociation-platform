@@ -1,0 +1,47 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.FollowsMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Follows">
+        select * from `follows`
+        <where>
+            <if test="fromId != null"> and from_id = #{fromId}</if>
+            <if test="toId != null"> and to_id = #{toId}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <delete id="deleteById">
+        delete from `follows`
+        where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Follows" useGeneratedKeys="true">
+        insert into `follows`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="fromId != null">from_id,</if>
+            <if test="toId != null">to_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="fromId != null">#{fromId},</if>
+            <if test="toId != null">#{toId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Follows">
+        update `follows`
+        <set>
+            <if test="fromId != null">
+                from_id = #{fromId},
+            </if>
+            <if test="toId != null">
+                to_id = #{toId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

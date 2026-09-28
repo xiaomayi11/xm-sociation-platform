@@ -1,0 +1,59 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.NotificationMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Notification">
+        select notification.*, u.name as fromUserName, u.avatar as fromUserAvatar from `notification`
+        left join user u on notification.from_user_id = u.id
+        <where>
+            <if test="userId != null"> and notification.user_id = #{userId}</if>
+            <if test="type != null"> and notification.type = #{type}</if>
+            <if test="isRead != null"> and notification.is_read = #{isRead}</if>
+        </where>
+        order by notification.id desc
+    </select>
+
+    <delete id="deleteById">
+        delete from `notification` where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Notification" useGeneratedKeys="true">
+        insert into `notification`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="fromUserId != null">from_user_id,</if>
+            <if test="type != null">type,</if>
+            <if test="relId != null">rel_id,</if>
+            <if test="content != null">content,</if>
+            <if test="isRead != null">is_read,</if>
+            <if test="time != null">time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="fromUserId != null">#{fromUserId},</if>
+            <if test="type != null">#{type},</if>
+            <if test="relId != null">#{relId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="isRead != null">#{isRead},</if>
+            <if test="time != null">#{time},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Notification">
+        update `notification`
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="fromUserId != null">from_user_id = #{fromUserId},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="relId != null">rel_id = #{relId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="isRead != null">is_read = #{isRead},</if>
+            <if test="time != null">time = #{time},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

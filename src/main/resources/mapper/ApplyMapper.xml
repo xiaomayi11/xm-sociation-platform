@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ApplyMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Apply">
+        select apply.*, activity.title as activityName, user.name as userName,
+               reviewer.name as reviewerName
+        from `apply`
+        left join activity on apply.activity_id = activity.id
+        left join user on apply.user_id = user.id
+        left join user reviewer on apply.reviewer_id = reviewer.id
+        <where>
+            <if test="activityName != null"> and activity.title like concat('%', #{activityName}, '%')</if>
+            <if test="userName != null"> and user.name like concat('%', #{userName}, '%')</if>
+            <if test="userId != null"> and apply.user_id = #{userId}</if>
+            <if test="reviewerId != null"> and apply.reviewer_id = #{reviewerId}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <delete id="deleteById">
+        delete from `apply`
+        where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Apply" useGeneratedKeys="true">
+        insert into `apply`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="activityId != null">activity_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="time != null">time,</if>
+            <if test="status != null">status,</if>
+            <if test="reason != null">reason,</if>
+            <if test="reviewerId != null">reviewer_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="activityId != null">#{activityId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="time != null">#{time},</if>
+            <if test="status != null">#{status},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="reviewerId != null">#{reviewerId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Apply">
+        update `apply`
+        <set>
+            <if test="activityId != null">
+                activity_id = #{activityId},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="reason != null">
+                reason = #{reason},
+            </if>
+            <if test="reviewerId != null">
+                reviewer_id = #{reviewerId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

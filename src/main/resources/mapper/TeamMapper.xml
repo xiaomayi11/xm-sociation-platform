@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.TeamMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Team">
+        select t.*,
+               u.name as leader_name,
+               u.avatar as leader_avatar,
+               a.title as activity_name,
+               teacher.name as teacher_name,
+               (select count(*) from team_member where team_id = t.id) as member_count
+        from `team` t
+        left join `user` u on t.leader_id = u.id
+        left join `activity` a on t.activity_id = a.id
+        left join `user` teacher on t.teacher_id = teacher.id
+        <where>
+            <if test="teamName != null and teamName != ''"> and t.team_name like concat('%', #{teamName}, '%')</if>
+            <if test="status != null and status != ''"> and t.status = #{status}</if>
+            <if test="teacherId != null"> and t.teacher_id = #{teacherId}</if>
+            <if test="leaderId != null"> and t.leader_id = #{leaderId}</if>
+            <if test="activityId != null"> and t.activity_id = #{activityId}</if>
+            <if test="competitionType != null and competitionType != ''"> and t.competition_type = #{competitionType}</if>
+        </where>
+        order by t.create_time desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Team">
+        select t.*,
+               u.name as leader_name,
+               u.avatar as leader_avatar,
+               a.title as activity_name,
+               teacher.name as teacher_name,
+               (select count(*) from team_member where team_id = t.id) as member_count
+        from `team` t
+        left join `user` u on t.leader_id = u.id
+        left join `activity` a on t.activity_id = a.id
+        left join `user` teacher on t.teacher_id = teacher.id
+        where t.id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from `team` where id = #{id}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from `team` where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Team" useGeneratedKeys="true">
+        insert into `team`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="teamName != null">team_name,</if>
+            <if test="description != null">description,</if>
+            <if test="maxMembers != null">max_members,</if>
+            <if test="leaderId != null">leader_id,</if>
+            <if test="activityId != null">activity_id,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="teacherId != null">teacher_id,</if>
+            <if test="requiredSkills != null">required_skills,</if>
+            <if test="competitionType != null">competition_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="teamName != null">#{teamName},</if>
+            <if test="description != null">#{description},</if>
+            <if test="maxMembers != null">#{maxMembers},</if>
+            <if test="leaderId != null">#{leaderId},</if>
+            <if test="activityId != null">#{activityId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="teacherId != null">#{teacherId},</if>
+            <if test="requiredSkills != null">#{requiredSkills},</if>
+            <if test="competitionType != null">#{competitionType},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Team">
+        update `team`
+        <set>
+            <if test="teamName != null">team_name = #{teamName},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="maxMembers != null">max_members = #{maxMembers},</if>
+            <if test="leaderId != null">leader_id = #{leaderId},</if>
+            <if test="activityId != null">activity_id = #{activityId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="memberCount != null">member_count = #{memberCount},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="teacherId != null">teacher_id = #{teacherId},</if>
+            <if test="requiredSkills != null">required_skills = #{requiredSkills},</if>
+            <if test="competitionType != null">competition_type = #{competitionType},</if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>
